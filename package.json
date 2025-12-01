@@ -1,0 +1,37 @@
+{
+  "name": "hyperliquid-mpc-kms",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "dev": "nodemon --exec tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@aws-sdk/client-kms": "^3.940.0",
+    "@aws-sdk/client-secrets-manager": "^3.940.0",
+    "@fastify/rate-limit": "^10.3.0",
+    "@noble/secp256k1": "^3.0.0",
+    "dotenv": "^17.2.3",
+    "elliptic": "^6.6.1",
+    "fastify": "^5.6.2",
+    "tweetnacl": "^1.0.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.10.1",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.11",
+    "ts-jest": "^29.4.6",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
