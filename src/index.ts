@@ -184,9 +184,11 @@ fastify.post<{
       success: true,
       wallet: {
         walletId: wallet.walletId,
-        aggregatedPublicKey: wallet.aggregatedPublicKey,
+        publicKey: wallet.publicKey,  // Changed from aggregatedPublicKey
+        shareIds: wallet.shareIds,
         createdAt: new Date().toISOString(),
         mpcEnabled: true,
+        tssMethod: 'Multi-round ECDSA (GG20-inspired)',
         metadata
       }
     };
@@ -214,15 +216,13 @@ fastify.post<{
       return reply.code(400).send({ error: 'MPC is not enabled' });
     }
 
-    // Hash the order payload
-    const message = JSON.stringify(orderPayload);
-    const messageHash = Buffer.from(require('crypto').createHash('sha256').update(message).digest());
+    // Serialize order payload
+    const message = Buffer.from(JSON.stringify(orderPayload), 'utf-8');
     
-    // Sign using 2 of 3 nodes
+    // Sign using TRUE threshold signatures (no key reconstruction!)
     const result = await mpcCoordinator.signWithMPC({
       walletId,
-      messageHash,
-      nodeIds: ['node1', 'node2'] // Use threshold nodes
+      message
     });
     
     return {
@@ -230,7 +230,8 @@ fastify.post<{
       signature: result.signature,
       walletId,
       mpcSigning: true,
-      nodesUsed: result.partialSignatures.length
+      method: result.signingMethod,
+      security: 'Private key NEVER reconstructed - TSS multi-round protocol'
     };
   } catch (error: any) {
     fastify.log.error(error);
